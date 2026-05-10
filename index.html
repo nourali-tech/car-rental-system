@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Car Rental</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Car Rental System</h1>
+
+    <form method="GET" action="/">
+        <input name="query" placeholder="Search by Plate / Model / Year">
+        <button type="submit">Search</button>
+        <a href="/" class="button-link">Reset</a>
+    </form>
+
+    <div style="display: flex; justify-content: space-around; background: #1e293b; padding: 20px; border-radius: 10px;">
+
+        <form method="post" action="/add_car">
+            <h3>Add Car</h3>
+            <input name="model" placeholder="Model" required>
+            <input name="year" type="number" placeholder="Year" required>
+            <input name="plate" placeholder="Plate ID" required>
+            <input name="price" type="number" placeholder="Price" required>
+
+            <select name="office" required>
+                <option value="Main Office">Main Office</option>
+                <option value="Branch">Branch</option>
+            </select>
+
+            <button type="submit">Add</button>
+        </form>
+
+        <form method="post" action="/add_customer">
+            <h3>Add Customer</h3>
+            <input name="name" placeholder="Name" required>
+            <button type="submit">Add</button>
+        </form>
+
+    </div>
+
+    <a href="/reports" class="button-link">View Reports</a>
+
+    <table>
+        <tr>
+            <th>Model</th>
+            <th>Plate</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+
+        {% for car in cars %}
+        <tr>
+            <td>{{ car['model'] }} ({{ car['year'] }})</td>
+            <td>{{ car['plate_id'] }}</td>
+            <td>{{ car['price'] }}</td>
+            <td>{{ car['status'] }}</td>
+
+            <td>
+                {% if car['status'] == 'active' %}
+                <form method="post" action="/reserve/{{ car['id'] }}">
+                    <select name="customer_id" required>
+                        <option value="" disabled selected>Customer</option>
+                        {% for c in customers %}
+                        <option value="{{ c['id'] }}">{{ c['name'] }}</option>
+                        {% endfor %}
+                    </select>
+                    <input name="payment" type="number" placeholder="Pay" required>
+                    <button type="submit">Reserve</button>
+                </form>
+                {% else %}
+                <form method="post" action="/return/{{ car['id'] }}">
+                    <button type="submit">Return</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+</body>
+</html>

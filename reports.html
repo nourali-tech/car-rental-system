@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reports</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Reports</h1>
+
+    <h3>Reservations Log</h3>
+    <table>
+        <tr>
+            <th>Customer</th>
+            <th>Car</th>
+            <th>Plate</th>
+            <th>Paid</th>
+        </tr>
+
+        {% for r in reservations %}
+        <tr>
+            <td>{{ r['c_name'] }}</td>
+            <td>{{ r['c_model'] }}</td>
+            <td>{{ r['plate_id'] }}</td>
+            <td>{{ r['payment'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Current Inventory Status</h3>
+    <table>
+        <tr>
+            <th>Car</th>
+            <th>Plate</th>
+            <th>Status</th>
+        </tr>
+
+        {% for cs in car_status %}
+        <tr>
+            <td>{{ cs['model'] }}</td>
+            <td>{{ cs['plate_id'] }}</td>
+            <td>{{ cs['status'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>
+        Total Revenue:
+        {{ total['total'] if total and total['total'] else 0 }}
+    </h2>
+
+    <a href="/" class="button-link">Back Home</a>
+
+</div>
+
+</body>
+</html>
